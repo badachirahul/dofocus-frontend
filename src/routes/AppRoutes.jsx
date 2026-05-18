@@ -2,10 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import LandingPage from "../pages/LandingPage"
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
-
-function DashboardPage() {
-  return <div className="p-10 text-3xl font-bold">Dashboard Page</div>;
-}
+import DashboardPage from "../pages/DashboardPage";
 
 function FocusPage() {
   return <div className="p-10 text-3xl font-bold">Focus Page</div>;
