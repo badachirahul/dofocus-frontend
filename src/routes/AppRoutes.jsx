@@ -1,8 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-
-function LandingPage() {
-  return <div className="p-10 text-3xl font-bold">Landing Page</div>;
-}
+import LandingPage from "../pages/LandingPage"
 
 function LoginPage() {
   return <div className="p-10 text-3xl font-bold">Login Page</div>;
