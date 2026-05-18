@@ -1,9 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import LandingPage from "../pages/LandingPage"
-
-function LoginPage() {
-  return <div className="p-10 text-3xl font-bold">Login Page</div>;
-}
+import LoginPage from "../pages/LoginPage";
 
 function RegisterPage() {
   return <div className="p-10 text-3xl font-bold">Register Page</div>;
