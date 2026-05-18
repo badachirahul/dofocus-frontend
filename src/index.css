@@ -1,0 +1,13 @@
+@import "tailwindcss";
+/* Define the order: Reset < AntD < Utilities */
+@layer tailwind-base, antd, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@tailwind components;
+
+@layer tailwind-utilities {
+  @tailwind utilities;
+}
