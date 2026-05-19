@@ -103,6 +103,7 @@ const DashboardPage = () => {
 
   const handleToggleTask = async (task) => {
     const response = await updateTaskApi(task.id, {
+      task_name: task.task_name,
       completed: !task.completed,
     });
 
@@ -121,7 +122,7 @@ const DashboardPage = () => {
 
   const handleEditTask = async (id, updatedName, completed) => {
     const response = await updateTaskApi(id, {
-      title: updatedName,
+      task_name: updatedName,
       completed: completed,
     });
 
