@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input, Button, Flex, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { sendOtpApi, verifyOtpApi, registerApi } from "../api/authApi";
+import { sendOtpApi, verifyOtpApi, registerApi } from "../features/auth/authApi";
 const RegisterPage = () => {
   useEffect(() => {
     document.title = "Do Focus | Register";

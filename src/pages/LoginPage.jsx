@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Input, Button, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { loginApi } from "../api/authApi";
+import { loginApi } from "../features/auth/authApi";
 import { setToken } from "../utils/localStorage";
 const LoginPage = () => {
   const navigate = useNavigate();
