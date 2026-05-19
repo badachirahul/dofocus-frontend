@@ -1,10 +1,4 @@
-import {
-  Card,
-  Checkbox,
-  Button,
-  Input,
-  Space,
-} from "antd";
+import { Card, Checkbox, Button, Input, Space } from "antd";
 
 import {
   EditOutlined,
@@ -24,15 +18,12 @@ const TaskCard = ({
 }) => {
   const navigate = useNavigate();
 
-  const [isEditing, setIsEditing] =
-    useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const [editText, setEditText] = useState(
-    task.task_name
-  );
+  const [editText, setEditText] = useState(task.task_name);
 
   const handleSave = () => {
-    handleEditTask(task.id, editText);
+    handleEditTask(task.id, editText, task.completed);
 
     setIsEditing(false);
   };
@@ -40,30 +31,23 @@ const TaskCard = ({
   return (
     <Card className="rounded-2xl shadow-sm">
       <div className="flex items-center justify-between gap-4">
-        
         {/* Left */}
         <div className="flex items-center gap-4 flex-1">
           <Checkbox
             checked={task.completed}
-            onChange={() =>
-              handleToggleTask(task.id)
-            }
+            onChange={() => handleToggleTask(task)}
           />
 
           {isEditing ? (
             <Input
               value={editText}
-              onChange={(e) =>
-                setEditText(e.target.value)
-              }
+              onChange={(e) => setEditText(e.target.value)}
               onPressEnter={handleSave}
             />
           ) : (
             <p
               className={`m-0 text-lg ${
-                task.completed
-                  ? "line-through text-gray-400"
-                  : ""
+                task.completed ? "line-through text-gray-400" : ""
               }`}
             >
               {task.task_name}
@@ -84,26 +68,20 @@ const TaskCard = ({
           ) : (
             <Button
               icon={<EditOutlined />}
-              onClick={() =>
-                setIsEditing(true)
-              }
+              onClick={() => setIsEditing(true)}
             />
           )}
 
           <Button
             danger
             icon={<DeleteOutlined />}
-            onClick={() =>
-              handleDeleteTask(task.id)
-            }
+            onClick={() => handleDeleteTask(task.id)}
           />
 
           <Button
             type="primary"
             icon={<PlayCircleOutlined />}
-            onClick={() =>
-              navigate(`/focus/${task.id}`)
-            }
+            onClick={() => navigate(`/focus/${task.id}`)}
           >
             Focus
           </Button>
