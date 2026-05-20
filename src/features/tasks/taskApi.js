@@ -51,9 +51,11 @@ export const createTaskApi = async (taskData) => {
   try {
     const token = localStorage.getItem("token");
 
+    console.log("Token :", token);
+
     const response = await fetch(`${BASE_URL}/tasks`, {
       method: "POST",
-
+      
       headers: {
         "Content-Type": "application/json",
 
@@ -62,6 +64,8 @@ export const createTaskApi = async (taskData) => {
 
       body: JSON.stringify(taskData),
     });
+     
+    console.log("Response :", response);
 
     const data = await response.json();
 
@@ -78,6 +82,8 @@ export const createTaskApi = async (taskData) => {
       data,
     };
   } catch (error) {
+    console.log("Error :", error);
+
     return {
       success: false,
 
