@@ -1,9 +1,5 @@
-// src/pages/FocusPage.jsx
-
 import { useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Card, message } from "antd";
@@ -23,6 +19,7 @@ import CancelSessionModal from "../components/focus/CancelSessionModal";
 import { toggleTask } from "../features/tasks/taskSlice";
 
 import {
+  setSessionId,
   setSessionStatus,
   setTotalSeconds,
   setTimeLeft,
@@ -37,11 +34,18 @@ import {
   resetFocusSession,
 } from "../features/focus/focusSlice";
 
+import {
+  startFocusSessionApi,
+  pauseFocusSessionApi,
+  resumeFocusSessionApi,
+  finishFocusSessionApi,
+  cancelFocusSessionApi,
+  getCurrentSessionApi,
+} from "../features/focus/focusApi";
+
 const FocusPage = () => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
   const { taskId } = useParams();
 
   // =========================
@@ -49,7 +53,6 @@ const FocusPage = () => {
   // =========================
 
   const { tasks } = useSelector((state) => state.tasks);
-
   const focusTask = tasks.find((task) => String(task.id) === String(taskId));
 
   // if focusTask not found
@@ -60,18 +63,15 @@ const FocusPage = () => {
   // =========================
 
   const {
+    sessionId,
     sessionStatus,
-
     totalSeconds,
     timeLeft,
-
     isEditing,
     editMinutes,
-
     isBreakMode,
     breakTotalSeconds,
     breakTimeLeft,
-
     completionModalOpen,
     breakModalOpen,
     cancelModalOpen,
@@ -83,7 +83,6 @@ const FocusPage = () => {
 
   const task = {
     id: taskId,
-
     task_name: focusTask?.task_name || "Task Not Found",
   };
 
@@ -96,6 +95,30 @@ const FocusPage = () => {
   }, [task.task_name]);
 
   // =========================
+  // Restore Session
+  // =========================
+
+  useEffect(() => {
+    const restoreSession = async () => {
+      const response = await getCurrentSessionApi(taskId);
+
+      if (!response.success || !response.data?.data) {
+        return;
+      }
+
+      const session = response.data.data;
+      dispatch(setSessionId(session.session_id));
+      dispatch(setSessionStatus(session.status));
+      dispatch(setTotalSeconds(session.timer_duration_seconds));
+      dispatch(
+        setTimeLeft(session.timer_duration_seconds - session.focused_seconds),
+      );
+    };
+
+    restoreSession();
+  }, [taskId, dispatch]);
+
+  // =========================
   // Focus Timer
   // =========================
 
@@ -106,13 +129,9 @@ const FocusPage = () => {
       interval = setInterval(() => {
         if (timeLeft <= 1) {
           clearInterval(interval);
-
           dispatch(setSessionStatus("paused"));
-
           dispatch(setCompletionModalOpen(true));
-
           dispatch(setTimeLeft(0));
-
           return;
         }
 
@@ -145,9 +164,7 @@ const FocusPage = () => {
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
-
     const secs = seconds % 60;
-
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
@@ -159,11 +176,8 @@ const FocusPage = () => {
     const newSeconds = editMinutes * 60;
 
     dispatch(setTotalSeconds(newSeconds));
-
     dispatch(setTimeLeft(newSeconds));
-
     dispatch(setIsEditing(false));
-
     message.success("Timer updated");
   };
 
@@ -171,9 +185,19 @@ const FocusPage = () => {
   // Start
   // =========================
 
-  const handleStart = () => {
-    dispatch(setSessionStatus("active"));
+  const handleStart = async () => {
+    const response = await startFocusSessionApi({
+      task_id: task.id,
 
+      timer_duration_seconds: totalSeconds,
+    });
+    if (!response.success) {
+      message.error(response.message);
+      return;
+    }
+
+    dispatch(setSessionId(response.data.data.session_id));
+    dispatch(setSessionStatus("active"));
     message.success("Focus session started");
   };
 
@@ -181,9 +205,14 @@ const FocusPage = () => {
   // Pause
   // =========================
 
-  const handlePause = () => {
-    dispatch(setSessionStatus("paused"));
+  const handlePause = async () => {
+    const response = await pauseFocusSessionApi(sessionId);
 
+    if (!response.success) {
+      message.error(response.message);
+      return;
+    }
+    dispatch(setSessionStatus("paused"));
     message.info("Session paused");
   };
 
@@ -191,9 +220,15 @@ const FocusPage = () => {
   // Resume
   // =========================
 
-  const handleResume = () => {
-    dispatch(setSessionStatus("active"));
+  const handleResume = async () => {
+    const response = await resumeFocusSessionApi(sessionId);
 
+    if (!response.success) {
+      message.error(response.message);
+      return;
+    }
+
+    dispatch(setSessionStatus("active"));
     message.success("Session resumed");
   };
 
@@ -202,13 +237,8 @@ const FocusPage = () => {
   // =========================
 
   const handleFinish = () => {
-    // API PLACEHOLDER
-
     dispatch(setCompletionModalOpen(true));
-
-    dispatch(setSessionStatus("completed"));
-
-    message.success("Task completed");
+    dispatch(setSessionStatus("paused"));
   };
 
   // =========================
@@ -219,21 +249,22 @@ const FocusPage = () => {
     dispatch(setCancelModalOpen(true));
   };
 
-  const handleConfirmCancel = () => {
-    // API PLACEHOLDER
+  const handleConfirmCancel = async () => {
+    const response = await cancelFocusSessionApi(sessionId);
+
+    if (!response.success) {
+      message.error(response.message);
+      return;
+    }
 
     dispatch(setCancelModalOpen(false));
-
     dispatch(setSessionStatus("cancelled"));
-
     navigate("/dashboard");
-
     message.warning("Session cancelled");
   };
 
   const handleContinueSession = () => {
     dispatch(setCancelModalOpen(false));
-
     message.info("Session continued");
   };
 
@@ -241,26 +272,24 @@ const FocusPage = () => {
   // Completion Modal
   // =========================
 
-  const handleTaskCompleted = () => {
+  const handleTaskCompleted = async () => {
     dispatch(setCompletionModalOpen(false));
 
+    const response = await finishFocusSessionApi(sessionId);
+
+    if (!response.success) {
+      message.error(response.message);
+      return;
+    }
+
     dispatch(toggleTask(task.id));
-
-    // API PLACEHOLDER
-    // API PLACEHOLDER
-
     dispatch(setSessionStatus("completed"));
-
     dispatch(setBreakModalOpen(true));
   };
 
   const handleTaskNotCompleted = () => {
     dispatch(setCompletionModalOpen(false));
-
-    // API PLACEHOLDER
-
     dispatch(resetFocusSession());
-
     message.info("Task restarted");
   };
 
@@ -270,15 +299,12 @@ const FocusPage = () => {
 
   const handleNextTask = () => {
     dispatch(setBreakModalOpen(false));
-
     navigate("/dashboard");
   };
 
   const handleTakeBreak = () => {
     dispatch(setBreakModalOpen(false));
-
     dispatch(setIsBreakMode(true));
-
     message.success("Break started");
   };
 
@@ -296,17 +322,14 @@ const FocusPage = () => {
             <>
               {/* Header */}
               <FocusHeader taskName={task.task_name} />
-
               {/* Status */}
               <FocusStatus sessionStatus={sessionStatus} />
-
               {/* Timer */}
               <FocusTimer
                 timeLeft={timeLeft}
                 totalSeconds={totalSeconds}
                 formatTime={formatTime}
               />
-
               {/* Timer Editor */}
               <TimerEditor
                 isEditing={isEditing}
@@ -316,7 +339,6 @@ const FocusPage = () => {
                 handleSaveTimer={handleSaveTimer}
                 sessionStatus={sessionStatus}
               />
-
               {/* Controls */}
               <FocusControls
                 sessionStatus={sessionStatus}
@@ -329,21 +351,18 @@ const FocusPage = () => {
             </>
           )}
         </Card>
-
         {/* Completion Modal */}
         <CompletionModal
           open={completionModalOpen}
           handleTaskCompleted={handleTaskCompleted}
           handleTaskNotCompleted={handleTaskNotCompleted}
         />
-
         {/* Break Modal */}
         <BreakModal
           open={breakModalOpen}
           handleNextTask={handleNextTask}
           handleTakeBreak={handleTakeBreak}
         />
-
         {/* Cancel Modal */}
         <CancelSessionModal
           open={cancelModalOpen}
