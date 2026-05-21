@@ -4,10 +4,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import DashboardPage from "../pages/DashboardPage";
 import FocusPage from "../pages/FocusPage";
-
-function ProfilePage() {
-  return <div className="p-10 text-3xl font-bold">Profile Page</div>;
-}
+import ProfilePage from "../pages/ProfilePage";
 
 const AppRoutes = createBrowserRouter([
   {

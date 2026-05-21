@@ -11,3 +11,54 @@
 @layer tailwind-utilities {
   @tailwind utilities;
 }
+.react-calendar-heatmap text {
+  fill: #9ca3af;
+  font-size: 11px;
+}
+
+.react-calendar-heatmap rect {
+  rx: 4px;
+  ry: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.react-calendar-heatmap rect:hover {
+  stroke: #ffffff;
+  stroke-width: 1px;
+  cursor: pointer;
+  transform: scale(1.12);
+}
+
+/* Empty Cells */
+.react-calendar-heatmap .color-empty {
+  fill: #1f1f1f;
+}
+
+/* Green Levels */
+.react-calendar-heatmap .color-scale-1 {
+  fill: #0e4429;
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: #006d32;
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: #26a641;
+}
+
+.react-calendar-heatmap .color-scale-4 {
+  fill: #39d353;
+}
+
+/* Month Labels */
+.react-calendar-heatmap-month-label {
+  fill: #d1d5db;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Responsive */
+.react-calendar-heatmap {
+  min-width: 900px;
+}
