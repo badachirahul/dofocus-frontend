@@ -1,10 +1,7 @@
-// src/pages/FocusPage.jsx
-
 import { useEffect, useState } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, message } from "antd";
-
-import { useNavigate } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
 
@@ -18,27 +15,34 @@ import BreakModal from "../components/focus/BreakModal";
 import BreakTimer from "../components/focus/BreakTimer";
 import CancelSessionModal from "../components/focus/CancelSessionModal";
 
+import { toggleTask } from "../features/tasks/taskSlice";
+
 const FocusPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { taskId } = useParams();
+  const { tasks } = useSelector((state) => state.tasks);
+  const focusTask = tasks.find((task) => String(task.id) === taskId);
+  //if focusTask is not their then we have to do: GET api/v1/task/:taskId
 
   useEffect(() => {
-    document.title = "Do Focus | Focus Session";
+    document.title = "Do Focus | Focus Session | " + taskId;
   }, []);
 
   // =========================
   // Demo Task
   // =========================
-
   const task = {
-    id: 1,
-    task_name: "Study DBMS",
+    id: taskId,
+    task_name: focusTask?.task_name || "Task Not Found",
   };
 
   // =========================
   // Timer States
   // =========================
 
-  const DEFAULT_MINUTES = 1;
+  const DEFAULT_MINUTES = 25;
 
   const [totalSeconds, setTotalSeconds] = useState(DEFAULT_MINUTES * 60);
 
@@ -183,7 +187,7 @@ const FocusPage = () => {
   const handleFinish = () => {
     // API PLACEHOLDER
     setCompletionModalOpen(true);
-    
+
     setSessionStatus("completed");
 
     message.success("Task completed");
@@ -221,9 +225,9 @@ const FocusPage = () => {
 
   const handleTaskCompleted = () => {
     setCompletionModalOpen(false);
-
-    // API PLACEHOLDER
-    // API PLACEHOLDER
+    dispatch(toggleTask(task.id));
+    // API PLACEHOLDER (Task Completed api)
+    // API PLACEHOLDER (Session Completed api)
 
     setSessionStatus("completed");
 
@@ -233,7 +237,7 @@ const FocusPage = () => {
   const handleTaskNotCompleted = () => {
     setCompletionModalOpen(false);
 
-    // API PLACEHOLDER
+    // API PLACEHOLDER (Session Completed api)
 
     // Reset Everything
     setSessionStatus("idle");
