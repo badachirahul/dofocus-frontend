@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+// src/pages/FocusPage.jsx
+
+import { useEffect } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
+
 import { useNavigate, useParams } from "react-router-dom";
+
 import { Card, message } from "antd";
 
 import MainLayout from "../layouts/MainLayout";
@@ -17,69 +22,81 @@ import CancelSessionModal from "../components/focus/CancelSessionModal";
 
 import { toggleTask } from "../features/tasks/taskSlice";
 
+import {
+  setSessionStatus,
+  setTotalSeconds,
+  setTimeLeft,
+  decrementTime,
+  setIsEditing,
+  setEditMinutes,
+  setIsBreakMode,
+  decrementBreakTime,
+  setCompletionModalOpen,
+  setBreakModalOpen,
+  setCancelModalOpen,
+  resetFocusSession,
+} from "../features/focus/focusSlice";
+
 const FocusPage = () => {
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const { taskId } = useParams();
+
+  // =========================
+  // Tasks
+  // =========================
+
   const { tasks } = useSelector((state) => state.tasks);
-  const focusTask = tasks.find((task) => String(task.id) === taskId);
-  //if focusTask is not their then we have to do: GET api/v1/task/:taskId
 
-  useEffect(() => {
-    document.title = "Do Focus | Focus Session | " + taskId;
-  }, []);
+  const focusTask = tasks.find((task) => String(task.id) === String(taskId));
+
+  // if focusTask not found
+  // GET /api/v1/task/:taskId
 
   // =========================
-  // Demo Task
+  // Focus Redux State
   // =========================
+
+  const {
+    sessionStatus,
+
+    totalSeconds,
+    timeLeft,
+
+    isEditing,
+    editMinutes,
+
+    isBreakMode,
+    breakTotalSeconds,
+    breakTimeLeft,
+
+    completionModalOpen,
+    breakModalOpen,
+    cancelModalOpen,
+  } = useSelector((state) => state.focus);
+
+  // =========================
+  // Task
+  // =========================
+
   const task = {
     id: taskId,
+
     task_name: focusTask?.task_name || "Task Not Found",
   };
 
   // =========================
-  // Timer States
+  // Title
   // =========================
 
-  const DEFAULT_MINUTES = 25;
-
-  const [totalSeconds, setTotalSeconds] = useState(DEFAULT_MINUTES * 60);
-
-  const [timeLeft, setTimeLeft] = useState(DEFAULT_MINUTES * 60);
-
-  const [sessionStatus, setSessionStatus] = useState("idle");
+  useEffect(() => {
+    document.title = "Do Focus | Focus Session | " + task.task_name;
+  }, [task.task_name]);
 
   // =========================
-  // Edit States
-  // =========================
-
-  const [isEditing, setIsEditing] = useState(false);
-
-  const [editMinutes, setEditMinutes] = useState(DEFAULT_MINUTES);
-
-  // =========================
-  // Modal States
-  // =========================
-
-  const [completionModalOpen, setCompletionModalOpen] = useState(false);
-
-  const [breakModalOpen, setBreakModalOpen] = useState(false);
-
-  const [cancelModalOpen, setCancelModalOpen] = useState(false);
-
-  // =========================
-  // Break States
-  // =========================
-
-  const BREAK_TOTAL_SECONDS = 5 * 60;
-
-  const [isBreakMode, setIsBreakMode] = useState(false);
-
-  const [breakTimeLeft, setBreakTimeLeft] = useState(BREAK_TOTAL_SECONDS);
-
-  // =========================
-  // Timer Logic
+  // Focus Timer
   // =========================
 
   useEffect(() => {
@@ -87,24 +104,24 @@ const FocusPage = () => {
 
     if (sessionStatus === "active" && timeLeft > 0 && !isBreakMode) {
       interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
+        if (timeLeft <= 1) {
+          clearInterval(interval);
 
-            setSessionStatus("paused");
+          dispatch(setSessionStatus("paused"));
 
-            setCompletionModalOpen(true);
+          dispatch(setCompletionModalOpen(true));
 
-            return 0;
-          }
+          dispatch(setTimeLeft(0));
 
-          return prev - 1;
-        });
+          return;
+        }
+
+        dispatch(decrementTime());
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [sessionStatus, isBreakMode]);
+  }, [sessionStatus, timeLeft, isBreakMode, dispatch]);
 
   // =========================
   // Break Timer
@@ -115,12 +132,12 @@ const FocusPage = () => {
 
     if (isBreakMode && breakTimeLeft > 0) {
       interval = setInterval(() => {
-        setBreakTimeLeft((prev) => prev - 1);
+        dispatch(decrementBreakTime());
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isBreakMode, breakTimeLeft]);
+  }, [isBreakMode, breakTimeLeft, dispatch]);
 
   // =========================
   // Formatter
@@ -141,11 +158,11 @@ const FocusPage = () => {
   const handleSaveTimer = () => {
     const newSeconds = editMinutes * 60;
 
-    setTotalSeconds(newSeconds);
+    dispatch(setTotalSeconds(newSeconds));
 
-    setTimeLeft(newSeconds);
+    dispatch(setTimeLeft(newSeconds));
 
-    setIsEditing(false);
+    dispatch(setIsEditing(false));
 
     message.success("Timer updated");
   };
@@ -155,7 +172,7 @@ const FocusPage = () => {
   // =========================
 
   const handleStart = () => {
-    setSessionStatus("active");
+    dispatch(setSessionStatus("active"));
 
     message.success("Focus session started");
   };
@@ -165,7 +182,7 @@ const FocusPage = () => {
   // =========================
 
   const handlePause = () => {
-    setSessionStatus("paused");
+    dispatch(setSessionStatus("paused"));
 
     message.info("Session paused");
   };
@@ -175,7 +192,7 @@ const FocusPage = () => {
   // =========================
 
   const handleResume = () => {
-    setSessionStatus("active");
+    dispatch(setSessionStatus("active"));
 
     message.success("Session resumed");
   };
@@ -186,9 +203,10 @@ const FocusPage = () => {
 
   const handleFinish = () => {
     // API PLACEHOLDER
-    setCompletionModalOpen(true);
 
-    setSessionStatus("completed");
+    dispatch(setCompletionModalOpen(true));
+
+    dispatch(setSessionStatus("completed"));
 
     message.success("Task completed");
   };
@@ -198,15 +216,15 @@ const FocusPage = () => {
   // =========================
 
   const handleCancel = () => {
-    setCancelModalOpen(true);
+    dispatch(setCancelModalOpen(true));
   };
 
   const handleConfirmCancel = () => {
     // API PLACEHOLDER
 
-    setCancelModalOpen(false);
+    dispatch(setCancelModalOpen(false));
 
-    setSessionStatus("cancelled");
+    dispatch(setSessionStatus("cancelled"));
 
     navigate("/dashboard");
 
@@ -214,7 +232,7 @@ const FocusPage = () => {
   };
 
   const handleContinueSession = () => {
-    setCancelModalOpen(false);
+    dispatch(setCancelModalOpen(false));
 
     message.info("Session continued");
   };
@@ -224,31 +242,24 @@ const FocusPage = () => {
   // =========================
 
   const handleTaskCompleted = () => {
-    setCompletionModalOpen(false);
+    dispatch(setCompletionModalOpen(false));
+
     dispatch(toggleTask(task.id));
-    // API PLACEHOLDER (Task Completed api)
-    // API PLACEHOLDER (Session Completed api)
 
-    setSessionStatus("completed");
+    // API PLACEHOLDER
+    // API PLACEHOLDER
 
-    setBreakModalOpen(true);
+    dispatch(setSessionStatus("completed"));
+
+    dispatch(setBreakModalOpen(true));
   };
 
   const handleTaskNotCompleted = () => {
-    setCompletionModalOpen(false);
+    dispatch(setCompletionModalOpen(false));
 
-    // API PLACEHOLDER (Session Completed api)
+    // API PLACEHOLDER
 
-    // Reset Everything
-    setSessionStatus("idle");
-
-    setTotalSeconds(DEFAULT_MINUTES * 60);
-
-    setTimeLeft(DEFAULT_MINUTES * 60);
-
-    setEditMinutes(DEFAULT_MINUTES);
-
-    setIsEditing(false);
+    dispatch(resetFocusSession());
 
     message.info("Task restarted");
   };
@@ -258,15 +269,15 @@ const FocusPage = () => {
   // =========================
 
   const handleNextTask = () => {
-    setBreakModalOpen(false);
+    dispatch(setBreakModalOpen(false));
 
     navigate("/dashboard");
   };
 
   const handleTakeBreak = () => {
-    setBreakModalOpen(false);
+    dispatch(setBreakModalOpen(false));
 
-    setIsBreakMode(true);
+    dispatch(setIsBreakMode(true));
 
     message.success("Break started");
   };
@@ -278,7 +289,7 @@ const FocusPage = () => {
           {isBreakMode ? (
             <BreakTimer
               breakTimeLeft={breakTimeLeft}
-              breakTotalSeconds={BREAK_TOTAL_SECONDS}
+              breakTotalSeconds={breakTotalSeconds}
               formatTime={formatTime}
             />
           ) : (
@@ -300,8 +311,8 @@ const FocusPage = () => {
               <TimerEditor
                 isEditing={isEditing}
                 editMinutes={editMinutes}
-                setEditMinutes={setEditMinutes}
-                setIsEditing={setIsEditing}
+                setEditMinutes={(value) => dispatch(setEditMinutes(value))}
+                setIsEditing={(value) => dispatch(setIsEditing(value))}
                 handleSaveTimer={handleSaveTimer}
                 sessionStatus={sessionStatus}
               />
