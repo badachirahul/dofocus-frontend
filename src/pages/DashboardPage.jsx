@@ -84,6 +84,8 @@ const DashboardPage = () => {
   // =========================
 
   const handleDeleteTask = async (id) => {
+    dispatch(deleteTask(id));
+
     const response = await deleteTaskApi(id);
 
     if (!response.success) {
@@ -91,8 +93,6 @@ const DashboardPage = () => {
 
       return;
     }
-
-    dispatch(deleteTask(id));
 
     message.success("Task deleted");
   };
@@ -102,6 +102,8 @@ const DashboardPage = () => {
   // =========================
 
   const handleToggleTask = async (task) => {
+    dispatch(toggleTask(task.id));
+
     const response = await updateTaskApi(task.id, {
       task_name: task.task_name,
       completed: !task.completed,
@@ -109,11 +111,8 @@ const DashboardPage = () => {
 
     if (!response.success) {
       message.error(response.message);
-
       return;
     }
-
-    dispatch(toggleTask(task.id));
   };
 
   // =========================
@@ -121,6 +120,12 @@ const DashboardPage = () => {
   // =========================
 
   const handleEditTask = async (id, updatedName, completed) => {
+    dispatch(
+      editTask({
+        id,
+        task_name: updatedName,
+      }),
+    );
     const response = await updateTaskApi(id, {
       task_name: updatedName,
       completed: completed,
@@ -128,16 +133,8 @@ const DashboardPage = () => {
 
     if (!response.success) {
       message.error(response.message);
-
       return;
     }
-
-    dispatch(
-      editTask({
-        id,
-        task_name: updatedName,
-      }),
-    );
 
     message.success("Task updated");
   };
