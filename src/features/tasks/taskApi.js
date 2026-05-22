@@ -1,6 +1,7 @@
 // src/features/tasks/taskApi.js
 
 import { BASE_URL } from "../../config/config";
+import { getToken } from "../../utils/localStorage";
 
 // ====================================
 // Get All Tasks API
@@ -55,7 +56,7 @@ export const createTaskApi = async (taskData) => {
 
     const response = await fetch(`${BASE_URL}/tasks`, {
       method: "POST",
-      
+
       headers: {
         "Content-Type": "application/json",
 
@@ -64,7 +65,7 @@ export const createTaskApi = async (taskData) => {
 
       body: JSON.stringify(taskData),
     });
-     
+
     console.log("Response :", response);
 
     const data = await response.json();
@@ -160,6 +161,45 @@ export const deleteTaskApi = async (id) => {
         success: false,
 
         message: data.message || "Failed to delete task",
+      };
+    }
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+
+      message: "Server error. Please try again. " + error.message,
+    };
+  }
+};
+
+// ====================================
+// Get Single Task API
+// ====================================
+
+export const getSingleTaskApi = async (taskId) => {
+  try {
+    const token = getToken();
+    const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+
+        message: data.message || "Failed to fetch task",
       };
     }
 

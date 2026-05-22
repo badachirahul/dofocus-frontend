@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,6 +17,7 @@ import BreakTimer from "../components/focus/BreakTimer";
 import CancelSessionModal from "../components/focus/CancelSessionModal";
 
 import { toggleTask } from "../features/tasks/taskSlice";
+import { getSingleTaskApi } from "../features/tasks/taskApi";
 
 import {
   setSessionId,
@@ -42,6 +43,7 @@ import {
   cancelFocusSessionApi,
   getCurrentSessionApi,
 } from "../features/focus/focusApi";
+import { updateTaskApi } from "../features/tasks/taskApi";
 
 const FocusPage = () => {
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ const FocusPage = () => {
 
   const { tasks } = useSelector((state) => state.tasks);
   const focusTask = tasks.find((task) => String(task.id) === String(taskId));
-
+  const [taskName, setTaskName] = useState(null);
   // if focusTask not found
   // GET /api/v1/task/:taskId
 
@@ -83,7 +85,7 @@ const FocusPage = () => {
 
   const task = {
     id: taskId,
-    task_name: focusTask?.task_name || "Task Not Found",
+    task_name: focusTask?.task_name || taskName || "Task Not Found",
   };
 
   // =========================
@@ -100,6 +102,11 @@ const FocusPage = () => {
 
   useEffect(() => {
     const restoreSession = async () => {
+      const getSingleTask = await getSingleTaskApi(taskId);
+      if (getSingleTask.success) {
+        setTaskName(getSingleTask.data.task.task_name);
+      }
+
       const response = await getCurrentSessionApi(taskId);
 
       if (!response.success || !response.data?.data) {
@@ -155,8 +162,15 @@ const FocusPage = () => {
       }, 1000);
     }
 
+    // Break completed
+    if (isBreakMode && breakTimeLeft <= 0) {
+      message.success("Break completed");
+      dispatch(resetFocusSession());
+      navigate("/dashboard");
+    }
+
     return () => clearInterval(interval);
-  }, [isBreakMode, breakTimeLeft, dispatch]);
+  }, [isBreakMode, breakTimeLeft, dispatch, navigate]);
 
   // =========================
   // Formatter
@@ -188,7 +202,6 @@ const FocusPage = () => {
   const handleStart = async () => {
     const response = await startFocusSessionApi({
       task_id: task.id,
-
       timer_duration_seconds: totalSeconds,
     });
     if (!response.success) {
@@ -196,7 +209,7 @@ const FocusPage = () => {
       return;
     }
 
-    dispatch(setSessionId(response.data.session_id));
+    dispatch(setSessionId(response.data.session.session_id));
     dispatch(setSessionStatus("active"));
     message.success("Focus session started");
   };
@@ -237,7 +250,8 @@ const FocusPage = () => {
   // =========================
 
   const handleFinish = () => {
-    dispatch(setCompletionModalOpen(true));
+    // dispatch(setCompletionModalOpen(true));
+    handleTaskCompleted();
     dispatch(setSessionStatus("paused"));
   };
 
@@ -259,6 +273,7 @@ const FocusPage = () => {
 
     dispatch(setCancelModalOpen(false));
     dispatch(setSessionStatus("cancelled"));
+    dispatch(resetFocusSession());
     navigate("/dashboard");
     message.warning("Session cancelled");
   };
@@ -281,14 +296,29 @@ const FocusPage = () => {
       message.error(response.message);
       return;
     }
+    const TaskCompletedResponse = await updateTaskApi(task.id, {
+      task_name: task.task_name,
+      completed: true,
+    });
 
+    if (!TaskCompletedResponse.success) {
+      message.error(TaskCompletedResponse.message);
+      return;
+    }
     dispatch(toggleTask(task.id));
     dispatch(setSessionStatus("completed"));
+    dispatch(resetFocusSession());
     dispatch(setBreakModalOpen(true));
   };
 
-  const handleTaskNotCompleted = () => {
+  const handleTaskNotCompleted = async () => {
     dispatch(setCompletionModalOpen(false));
+    const response = await finishFocusSessionApi(sessionId);
+
+    if (!response.success) {
+      message.error(response.message);
+      return;
+    }
     dispatch(resetFocusSession());
     message.info("Task restarted");
   };
