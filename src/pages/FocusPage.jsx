@@ -18,6 +18,7 @@ import CancelSessionModal from "../components/focus/CancelSessionModal";
 
 import { toggleTask } from "../features/tasks/taskSlice";
 import { getSingleTaskApi } from "../features/tasks/taskApi";
+import alarmSound from "../assets/sounds/alarm1.mp3";
 
 import {
   setSessionId,
@@ -53,6 +54,8 @@ const FocusPage = () => {
     dispatch(resetFocusSession());
   }, []);
 
+  // alarm
+  const alarmAudio = new Audio(alarmSound);
   // =========================
   // Tasks
   // =========================
@@ -139,6 +142,7 @@ const FocusPage = () => {
       interval = setInterval(() => {
         if (timeLeft <= 1) {
           clearInterval(interval);
+          alarmAudio.play();
           dispatch(setSessionStatus("paused"));
           dispatch(setCompletionModalOpen(true));
           dispatch(setTimeLeft(0));
@@ -167,9 +171,12 @@ const FocusPage = () => {
 
     // Break completed
     if (isBreakMode && breakTimeLeft <= 0) {
+      alarmAudio.play();
       message.success("Break completed");
       dispatch(resetFocusSession());
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
     }
 
     return () => clearInterval(interval);
