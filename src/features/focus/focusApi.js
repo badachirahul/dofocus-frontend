@@ -3,7 +3,7 @@ import { BASE_URL } from "../../config/config";
 // ====================================
 // Start Focus Session
 // ====================================
-import { getToken } from "../utils/localStorage";
+import { getToken } from "../../utils/localStorage";
 
 export const startFocusSessionApi = async (focusData) => {
   try {

@@ -196,7 +196,7 @@ const FocusPage = () => {
       return;
     }
 
-    dispatch(setSessionId(response.data.data.session_id));
+    dispatch(setSessionId(response.data.session_id));
     dispatch(setSessionStatus("active"));
     message.success("Focus session started");
   };
