@@ -11,6 +11,7 @@ import {
   fetchProfileData,
   setSelectedDate,
 } from "../features/profile/profileSlice";
+import { getUserId } from "../utils/localStorage";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -18,11 +19,11 @@ const ProfilePage = () => {
   const { user, heatmapData, selectedDate, selectedDayData, loading } =
     useSelector((state) => state.profile);
 
-  const userId = "usr_12345";
+  const userId = getUserId();
 
   useEffect(() => {
     dispatch(fetchProfileData(userId));
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   const handleDateClick = (date) => {
     dispatch(setSelectedDate(date));
