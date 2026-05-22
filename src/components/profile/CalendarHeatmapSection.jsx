@@ -22,9 +22,13 @@ const MONTHS = [
   "Dec",
 ];
 
-const CalendarHeatmapSection = ({ heatmapData, onDateClick }) => {
-  const [year, setYear] = useState(2026);
-
+const CalendarHeatmapSection = ({ heatmapData, onDateClick, userFromYear }) => {
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
+  const yearsArray = Array.from(
+    { length: currentYear - userFromYear + 1 },
+    (_, index) => userFromYear + index,
+  );
   const heatmapMap = {};
 
   heatmapData.forEach((item) => {
@@ -64,9 +68,9 @@ const CalendarHeatmapSection = ({ heatmapData, onDateClick }) => {
             outline-none
           "
         >
-          <option value={2024}>2024</option>
-          <option value={2025}>2025</option>
-          <option value={2026}>2026</option>
+          {yearsArray.map((year) => (
+            <option key={year} value={year}>{year}</option>
+          ))}
         </select>
       </div>
 

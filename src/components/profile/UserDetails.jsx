@@ -5,11 +5,11 @@ const UserDetails = ({ user }) => {
 
       <div className="space-y-2">
         <p className="">
-          <span className="font-semibold ">Name:</span> {user?.Name}
+          <span className="font-semibold ">Name:</span> {user?.name}
         </p>
 
         <p className=" break-all">
-          <span className="font-semibold">Email:</span> {user?.Email}
+          <span className="font-semibold">Email:</span> {user?.email}
         </p>
       </div>
     </div>
