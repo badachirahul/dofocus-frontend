@@ -49,6 +49,9 @@ const FocusPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { taskId } = useParams();
+  useEffect(() => {
+    dispatch(resetFocusSession());
+  }, []);
 
   // =========================
   // Tasks

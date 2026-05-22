@@ -8,6 +8,7 @@ import RegisterPage from "../pages/RegisterPage";
 import DashboardPage from "../pages/DashboardPage";
 import FocusPage from "../pages/FocusPage";
 import ProfilePage from "../pages/ProfilePage";
+import ProtectedRoute from "./ProtectedRoute";
 
 const RootLayout = () => {
   return <Outlet />;
@@ -16,7 +17,9 @@ const RootLayout = () => {
 const AppRoutes = createBrowserRouter([
   {
     path: "/",
+
     element: <RootLayout />,
+
     errorElement: <ErrorPage />,
 
     children: [
@@ -24,25 +27,40 @@ const AppRoutes = createBrowserRouter([
         index: true,
         element: <LandingPage />,
       },
+
       {
         path: "login",
         element: <LoginPage />,
       },
+
       {
         path: "register",
         element: <RegisterPage />,
       },
+
+      // Protected
       {
-        path: "dashboard",
-        element: <DashboardPage />,
-      },
-      {
-        path: "focus/:taskId",
-        element: <FocusPage />,
-      },
-      {
-        path: "/profile",
-        element: <ProfilePage />,
+        element: <ProtectedRoute />,
+
+        children: [
+          {
+            path: "dashboard",
+
+            element: <DashboardPage />,
+          },
+
+          {
+            path: "focus/:taskId",
+
+            element: <FocusPage />,
+          },
+
+          {
+            path: "profile",
+
+            element: <ProfilePage />,
+          },
+        ],
       },
     ],
   },
