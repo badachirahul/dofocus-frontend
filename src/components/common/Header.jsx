@@ -5,6 +5,7 @@ import {
   DashboardOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { removeToken } from "../../utils/localStorage";
 
 const { Header } = Layout;
 
@@ -13,7 +14,7 @@ const HeaderComponent = () => {
 
   // Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    removeToken();
 
     navigate("/login");
   };
