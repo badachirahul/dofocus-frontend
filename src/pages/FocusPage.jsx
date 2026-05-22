@@ -29,7 +29,8 @@ import {
   setIsEditing,
   setEditMinutes,
   setIsBreakMode,
-  decrementBreakTime,
+  setBreakEndTime,
+  setBreakTimeLeft,
   setCompletionModalOpen,
   setBreakModalOpen,
   setCancelModalOpen,
@@ -78,6 +79,7 @@ const FocusPage = () => {
     isEditing,
     editMinutes,
     isBreakMode,
+    breakEndTime,
     breakTotalSeconds,
     breakTimeLeft,
     completionModalOpen,
@@ -160,28 +162,58 @@ const FocusPage = () => {
   // Break Timer
   // =========================
 
+  // useEffect(() => {
+  //   let interval = null;
+
+  //   if (isBreakMode && breakTimeLeft > 0) {
+  //     interval = setInterval(() => {
+  //       dispatch(decrementBreakTime());
+  //     }, 1000);
+  //   }
+
+  //   // Break completed
+  //   if (isBreakMode && breakTimeLeft <= 0) {
+  //     alarmAudio.play();
+  //     message.success("Break completed");
+  //     dispatch(resetFocusSession());
+  //     setTimeout(() => {
+  //       navigate("/dashboard");
+  //     }, 1000);
+  //   }
+
+  //   return () => clearInterval(interval);
+  // }, [isBreakMode, breakTimeLeft, dispatch, navigate]);
+
   useEffect(() => {
     let interval = null;
 
-    if (isBreakMode && breakTimeLeft > 0) {
+    if (isBreakMode && breakEndTime) {
       interval = setInterval(() => {
-        dispatch(decrementBreakTime());
-      }, 1000);
-    }
+        const remaining = Math.max(
+          0,
+          Math.floor((breakEndTime - Date.now()) / 1000),
+        );
 
-    // Break completed
-    if (isBreakMode && breakTimeLeft <= 0) {
-      alarmAudio.play();
-      message.success("Break completed");
-      dispatch(resetFocusSession());
-      setTimeout(() => {
-        navigate("/dashboard");
+        dispatch(setBreakTimeLeft(remaining));
+
+        if (remaining <= 0) {
+          clearInterval(interval);
+
+          alarmAudio.play();
+
+          message.success("Break completed");
+
+          dispatch(resetFocusSession());
+
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1000);
+        }
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isBreakMode, breakTimeLeft, dispatch, navigate]);
-
+  }, [isBreakMode, breakEndTime, dispatch, navigate]);
   // =========================
   // Formatter
   // =========================
@@ -342,9 +374,18 @@ const FocusPage = () => {
     navigate("/dashboard");
   };
 
+  // const handleTakeBreak = () => {
+  //   dispatch(setBreakModalOpen(false));
+  //   dispatch(setIsBreakMode(true));
+  //   message.success("Break started");
+  // };
   const handleTakeBreak = () => {
     dispatch(setBreakModalOpen(false));
+
     dispatch(setIsBreakMode(true));
+
+    dispatch(setBreakEndTime(Date.now() + 5 * 60 * 1000));
+
     message.success("Break started");
   };
 

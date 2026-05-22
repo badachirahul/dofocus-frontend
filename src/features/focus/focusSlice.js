@@ -1,3 +1,5 @@
+// src/features/focus/focusSlice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const DEFAULT_MINUTES = 25;
@@ -44,6 +46,8 @@ const initialState = {
   breakTotalSeconds: 5 * 60,
 
   breakTimeLeft: 5 * 60,
+
+  breakEndTime: null,
 
   // =========================
   // Modals
@@ -116,10 +120,8 @@ const focusSlice = createSlice({
       state.breakTimeLeft = action.payload;
     },
 
-    decrementBreakTime: (state) => {
-      if (state.breakTimeLeft > 0) {
-        state.breakTimeLeft -= 1;
-      }
+    setBreakEndTime: (state, action) => {
+      state.breakEndTime = action.payload;
     },
 
     // =========================
@@ -159,6 +161,8 @@ const focusSlice = createSlice({
 
       state.breakTimeLeft = 5 * 60;
 
+      state.breakEndTime = null;
+
       state.completionModalOpen = false;
 
       state.breakModalOpen = false;
@@ -185,7 +189,7 @@ export const {
   // Break
   setIsBreakMode,
   setBreakTimeLeft,
-  decrementBreakTime,
+  setBreakEndTime,
 
   // Modals
   setCompletionModalOpen,
