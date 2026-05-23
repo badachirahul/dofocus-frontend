@@ -5,7 +5,7 @@ const { Footer } = Layout;
 
 const FooterComponent = () => {
   return (
-    <Footer className="bg-white border-t px-6 py-4">
+    <Footer className="bg-white! border-t px-6 py-4">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
         {/* Left */}

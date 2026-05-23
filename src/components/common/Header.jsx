@@ -1,4 +1,4 @@
-import { Layout, Button, Avatar, Dropdown } from "antd";
+import { Layout, Avatar, Dropdown } from "antd";
 import {
   UserOutlined,
   LogoutOutlined,
@@ -47,7 +47,7 @@ const HeaderComponent = () => {
 
   return (
     <Header
-      className="px-6 flex items-center justify-between bg-white border-b"
+      className="px-6 flex items-center justify-between bg-black! border-b"
       style={{
         position: "sticky",
         top: 0,
@@ -61,9 +61,9 @@ const HeaderComponent = () => {
 
       {/* Right Side */}
       <div className="flex items-center gap-4">
-        <Button type="primary" onClick={() => navigate("/focus/1")}>
+        {/* <Button type="primary" onClick={() => navigate("/focus/1")}>
           Start Focus
-        </Button>
+        </Button> */}
 
         <Dropdown
           menu={{

@@ -64,9 +64,10 @@ const FocusPage = () => {
   const { tasks } = useSelector((state) => state.tasks);
   const focusTask = tasks.find((task) => String(task.id) === String(taskId));
   const [taskName, setTaskName] = useState(null);
-  // if focusTask not found
-  // GET /api/v1/task/:taskId
-
+  if (focusTask?.id == taskId && focusTask.completed) {
+    alert("This Task is finished");
+    navigate("/dashboard");
+  }
   // =========================
   // Focus Redux State
   // =========================
@@ -113,6 +114,10 @@ const FocusPage = () => {
       const getSingleTask = await getSingleTaskApi(taskId);
       if (getSingleTask.success) {
         setTaskName(getSingleTask.data.task.task_name);
+        if (getSingleTask.data.task.completed) {
+          alert("This Task is finished");
+          navigate("/dashboard");
+        }
       }
 
       const response = await getCurrentSessionApi(taskId);

@@ -12,6 +12,7 @@ const FocusTimer = ({ timeLeft, totalSeconds, formatTime }) => {
           type="circle"
           percent={Math.floor(percentage)}
           size={260}
+          strokeColor="#000"
           format={() => formatTime(timeLeft)}
         />
       </div>

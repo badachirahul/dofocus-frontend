@@ -62,3 +62,10 @@
 .react-calendar-heatmap {
   min-width: 900px;
 }
+
+
+.ant-btn-primary, [type='primary'] { background-color: #000000 !important; }
+
+.ant-progress-indicator{
+  color: #000 !important;
+}

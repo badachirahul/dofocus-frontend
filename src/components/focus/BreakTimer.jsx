@@ -15,7 +15,7 @@ const BreakTimer = ({ breakTimeLeft, breakTotalSeconds, formatTime }) => {
             type="circle"
             percent={Math.floor(percentage)}
             size={220}
-            strokeColor="#52c41a"
+            strokeColor="#000"
             format={() => formatTime(breakTimeLeft)}
           />
         </div>
