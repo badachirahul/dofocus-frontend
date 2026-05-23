@@ -66,10 +66,12 @@ const TaskCard = ({
               Save
             </Button>
           ) : (
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => setIsEditing(true)}
-            />
+            !task.completed && (
+              <Button
+                icon={<EditOutlined />}
+                onClick={() => setIsEditing(true)}
+              />
+            )
           )}
 
           <Button
@@ -78,13 +80,13 @@ const TaskCard = ({
             onClick={() => handleDeleteTask(task.id)}
           />
 
-          <Button
+          {!task.completed && <Button
             type="primary"
             icon={<PlayCircleOutlined />}
             onClick={() => navigate(`/focus/${task.id}`)}
           >
             Focus
-          </Button>
+          </Button>}
         </Space>
       </div>
     </Card>
