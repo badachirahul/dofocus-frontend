@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -12,12 +12,14 @@ import FocusTimer from "../components/focus/FocusTimer";
 import TimerEditor from "../components/focus/TimerEditor";
 import FocusControls from "../components/focus/FocusControls";
 import CompletionModal from "../components/focus/CompletionModal";
+import RestartTaskModal from "../components/focus/RestartTaskModal";
 import BreakModal from "../components/focus/BreakModal";
 import BreakTimer from "../components/focus/BreakTimer";
 import CancelSessionModal from "../components/focus/CancelSessionModal";
 
 import { toggleTask } from "../features/tasks/taskSlice";
 import { getSingleTaskApi } from "../features/tasks/taskApi";
+import { playAlarm, stopAlarm } from "../utils/audioUtils";
 import alarmSound from "../assets/sounds/alarm1.mp3";
 
 import {
@@ -61,7 +63,7 @@ const FocusPage = () => {
   }, []);
 
   // alarm
-  const alarmAudio = new Audio(alarmSound);
+  const alarmAudio = useRef(new Audio(alarmSound));
   // =========================
   // Tasks
   // =========================
@@ -69,6 +71,7 @@ const FocusPage = () => {
   const { tasks } = useSelector((state) => state.tasks);
   const focusTask = tasks.find((task) => String(task.id) === String(taskId));
   const [taskName, setTaskName] = useState(null);
+  const [restartModalOpen, setRestartModalOpen] = useState(false);
   // if (focusTask?.id == taskId && focusTask.completed) {
   //   alert("This Task is finished");
   //   navigate("/dashboard");
@@ -166,7 +169,7 @@ const FocusPage = () => {
         if (remaining <= 0) {
           clearInterval(interval);
 
-          alarmAudio.play();
+          playAlarm(alarmAudio.current);
 
           dispatch(setSessionStatus("paused"));
 
@@ -195,7 +198,6 @@ const FocusPage = () => {
 
   //   // Break completed
   //   if (isBreakMode && breakTimeLeft <= 0) {
-  //     alarmAudio.play();
   //     message.success("Break completed");
   //     dispatch(resetFocusSession());
   //     setTimeout(() => {
@@ -221,15 +223,16 @@ const FocusPage = () => {
         if (remaining <= 0) {
           clearInterval(interval);
 
-          alarmAudio.play();
+          playAlarm(alarmAudio.current);
 
           message.success("Break completed");
 
           dispatch(resetFocusSession());
 
           setTimeout(() => {
+            stopAlarm(alarmAudio.current);
             navigate("/dashboard");
-          }, 1000);
+          }, 7000);
         }
       }, 1000);
     }
@@ -356,6 +359,8 @@ const FocusPage = () => {
   const handleTaskCompleted = async () => {
     dispatch(setCompletionModalOpen(false));
 
+    stopAlarm(alarmAudio.current);
+
     const response = await finishFocusSessionApi(sessionId);
 
     if (!response.success) {
@@ -379,14 +384,35 @@ const FocusPage = () => {
 
   const handleTaskNotCompleted = async () => {
     dispatch(setCompletionModalOpen(false));
+
+    stopAlarm(alarmAudio.current);
+
     const response = await finishFocusSessionApi(sessionId);
 
     if (!response.success) {
       message.error(response.message);
       return;
     }
+
+    setRestartModalOpen(true);
+  };
+
+  const handleRestartTask = () => {
+    setRestartModalOpen(false);
+
     dispatch(resetFocusSession());
+
     message.info("Task restarted");
+  };
+
+  const handleBreakAfterIncompleteTask = () => {
+    setRestartModalOpen(false);
+
+    dispatch(setIsBreakMode(true));
+
+    dispatch(setBreakEndTime(Date.now() + 5 * 60 * 1000));
+
+    message.success("Break started");
   };
 
   // =========================
@@ -404,6 +430,7 @@ const FocusPage = () => {
   //   message.success("Break started");
   // };
   const handleTakeBreak = () => {
+    
     dispatch(setBreakModalOpen(false));
 
     dispatch(setIsBreakMode(true));
@@ -461,6 +488,12 @@ const FocusPage = () => {
           open={completionModalOpen}
           handleTaskCompleted={handleTaskCompleted}
           handleTaskNotCompleted={handleTaskNotCompleted}
+        />
+        {/* Restart Modal */}
+        <RestartTaskModal
+          open={restartModalOpen}
+          handleRestartTask={handleRestartTask}
+          handleBreak={handleBreakAfterIncompleteTask}
         />
         {/* Break Modal */}
         <BreakModal
