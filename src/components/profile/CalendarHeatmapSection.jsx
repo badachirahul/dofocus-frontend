@@ -31,22 +31,26 @@ const CalendarHeatmapSection = ({ heatmapData, onDateClick, userFromYear }) => {
   );
   const heatmapMap = {};
 
-  heatmapData.forEach((item) => {
+  heatmapData?.forEach((item) => {
     heatmapMap[item.date] = item.count;
   });
 
   const getColor = (count) => {
-    if (!count) return "bg-gray-200";
+    if (!count) return "bg-gray-300";
 
-    if (count < 1800) {
-      return "bg-green-200";
+    if (count <= 1200) {
+      return "bg-green-300";
     }
 
-    if (count < 3600) {
-      return "bg-green-400";
+    if (count <= 2400) {
+      return "bg-green-500";
     }
 
-    return "bg-green-600";
+    if (count <= 3600) {
+      return "bg-green-700"
+    }
+
+    return "bg-green-900";
   };
 
   return (

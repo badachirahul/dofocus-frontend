@@ -33,14 +33,14 @@ const FocusControls = ({
 
         {/* Pause */}
         {sessionStatus === "active" && (
-          <Button size="large" icon={<PauseOutlined />} onClick={handlePause}>
+          <Button className="hidden!" size="large" icon={<PauseOutlined />} onClick={handlePause}>
             Pause
           </Button>
         )}
 
         {/* Resume */}
         {sessionStatus === "paused" && (
-          <Button
+          <Button className="hidden!"
             type="primary"
             size="large"
             icon={<ReloadOutlined />}

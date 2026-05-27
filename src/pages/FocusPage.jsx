@@ -25,6 +25,7 @@ import {
   setSessionStatus,
   setTotalSeconds,
   setTimeLeft,
+  setEndTime,
   decrementTime,
   setIsEditing,
   setEditMinutes,
@@ -53,6 +54,10 @@ const FocusPage = () => {
   const { taskId } = useParams();
   useEffect(() => {
     dispatch(resetFocusSession());
+    if (focusTask?.id == taskId && focusTask.completed) {
+      alert("This Task is finished");
+      navigate("/dashboard");
+    }
   }, []);
 
   // alarm
@@ -64,10 +69,10 @@ const FocusPage = () => {
   const { tasks } = useSelector((state) => state.tasks);
   const focusTask = tasks.find((task) => String(task.id) === String(taskId));
   const [taskName, setTaskName] = useState(null);
-  if (focusTask?.id == taskId && focusTask.completed) {
-    alert("This Task is finished");
-    navigate("/dashboard");
-  }
+  // if (focusTask?.id == taskId && focusTask.completed) {
+  //   alert("This Task is finished");
+  //   navigate("/dashboard");
+  // }
   // =========================
   // Focus Redux State
   // =========================
@@ -77,6 +82,7 @@ const FocusPage = () => {
     sessionStatus,
     totalSeconds,
     timeLeft,
+    endTime,
     isEditing,
     editMinutes,
     isBreakMode,
@@ -115,7 +121,7 @@ const FocusPage = () => {
       if (getSingleTask.success) {
         setTaskName(getSingleTask.data.task.task_name);
         if (getSingleTask.data.task.completed) {
-          alert("This Task is finished");
+          alert("This Task is finished, getApi");
           navigate("/dashboard");
         }
       }
@@ -130,9 +136,12 @@ const FocusPage = () => {
       dispatch(setSessionId(session.session_id));
       dispatch(setSessionStatus(session.status));
       dispatch(setTotalSeconds(session.timer_duration_seconds));
-      dispatch(
-        setTimeLeft(session.timer_duration_seconds - session.focused_seconds),
-      );
+      const remaining =
+      session.timer_duration_seconds - session.focused_seconds;
+
+      dispatch(setTimeLeft(remaining));
+
+      dispatch(setEndTime(Date.now() + remaining * 1000));
     };
 
     restoreSession();
@@ -145,23 +154,31 @@ const FocusPage = () => {
   useEffect(() => {
     let interval = null;
 
-    if (sessionStatus === "active" && timeLeft > 0 && !isBreakMode) {
+    if (sessionStatus === "active" && endTime && !isBreakMode) {
       interval = setInterval(() => {
-        if (timeLeft <= 1) {
-          clearInterval(interval);
-          alarmAudio.play();
-          dispatch(setSessionStatus("paused"));
-          dispatch(setCompletionModalOpen(true));
-          dispatch(setTimeLeft(0));
-          return;
-        }
+        const remaining = Math.max(
+          0,
+          Math.floor((endTime - Date.now()) / 1000),
+        );
 
-        dispatch(decrementTime());
+        dispatch(setTimeLeft(remaining));
+
+        if (remaining <= 0) {
+          clearInterval(interval);
+
+          alarmAudio.play();
+
+          dispatch(setSessionStatus("paused"));
+
+          dispatch(setCompletionModalOpen(true));
+
+          dispatch(setTimeLeft(0));
+        }
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [sessionStatus, timeLeft, isBreakMode, dispatch]);
+  }, [sessionStatus, endTime, isBreakMode, dispatch]);
 
   // =========================
   // Break Timer
@@ -258,6 +275,7 @@ const FocusPage = () => {
 
     dispatch(setSessionId(response.data.session.session_id));
     dispatch(setSessionStatus("active"));
+    dispatch(setEndTime(Date.now() + totalSeconds * 1000));
     message.success("Focus session started");
   };
 
@@ -289,6 +307,7 @@ const FocusPage = () => {
     }
 
     dispatch(setSessionStatus("active"));
+    dispatch(setEndTime(Date.now() + timeLeft * 1000));
     message.success("Session resumed");
   };
 

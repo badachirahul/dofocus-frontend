@@ -29,6 +29,8 @@ const initialState = {
 
   timeLeft: DEFAULT_MINUTES * 60,
 
+  endTime: null,
+
   // =========================
   // Edit Timer
   // =========================
@@ -88,6 +90,10 @@ const focusSlice = createSlice({
 
     setTimeLeft: (state, action) => {
       state.timeLeft = action.payload;
+    },
+
+    setEndTime: (state, action) => {
+      state.endTime = action.payload;
     },
 
     decrementTime: (state) => {
@@ -153,6 +159,8 @@ const focusSlice = createSlice({
 
       state.timeLeft = DEFAULT_MINUTES * 60;
 
+      state.endTime = null;
+
       state.isEditing = false;
 
       state.editMinutes = DEFAULT_MINUTES;
@@ -180,6 +188,7 @@ export const {
   // Timer
   setTotalSeconds,
   setTimeLeft,
+  setEndTime,
   decrementTime,
 
   // Edit Timer
