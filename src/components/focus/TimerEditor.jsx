@@ -61,6 +61,9 @@ const TimerEditor = ({
             max={180}
             value={editMinutes}
             onChange={handleChange}
+            addonAfter={
+              <span className="text-neutral-500 text-xs">min</span>
+            }
           />
 
           <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>
@@ -68,9 +71,13 @@ const TimerEditor = ({
           </Button>
         </Space>
       ) : (
-        <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+        <button
+          onClick={() => setIsEditing(true)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-white/[0.03] text-neutral-300 text-sm font-medium hover:bg-white/[0.08] hover:border-white/20 hover:text-white transition-all duration-200 cursor-pointer"
+        >
+          <EditOutlined className="text-xs" />
           Edit Timer
-        </Button>
+        </button>
       )}
     </div>
   );

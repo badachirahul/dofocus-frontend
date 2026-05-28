@@ -26,6 +26,7 @@ const FocusControls = ({
             size="large"
             icon={<PlayCircleOutlined />}
             onClick={handleStart}
+            className="!px-6"
           >
             Start
           </Button>
@@ -33,14 +34,20 @@ const FocusControls = ({
 
         {/* Pause */}
         {sessionStatus === "active" && (
-          <Button className="hidden!" size="large" icon={<PauseOutlined />} onClick={handlePause}>
+          <Button
+            className="hidden!"
+            size="large"
+            icon={<PauseOutlined />}
+            onClick={handlePause}
+          >
             Pause
           </Button>
         )}
 
         {/* Resume */}
         {sessionStatus === "paused" && (
-          <Button className="hidden!"
+          <Button
+            className="hidden!"
             type="primary"
             size="large"
             icon={<ReloadOutlined />}
@@ -57,6 +64,7 @@ const FocusControls = ({
             size="large"
             icon={<CheckCircleOutlined />}
             onClick={handleFinish}
+            className="!px-6"
           >
             Finish
           </Button>
@@ -69,6 +77,7 @@ const FocusControls = ({
             size="large"
             icon={<CloseCircleOutlined />}
             onClick={handleCancel}
+            className="!px-6"
           >
             Cancel
           </Button>

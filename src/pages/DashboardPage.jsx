@@ -170,16 +170,58 @@ const DashboardPage = () => {
     },
   ];
 
+  // Stats summary
+  const totalCount = tasks.length;
+  const pendingCount = tasks.filter((t) => !t.completed).length;
+  const completedCount = tasks.filter((t) => t.completed).length;
+
   return (
     <MainLayout>
-      <div className="space-y-6 min-h-svh">
+      <div className="space-y-8 min-h-svh">
         {/* Welcome */}
-        <div>
-          <Title level={2}>Welcome Back 👋</Title>
+        <div className="fade-in-up">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <Title
+                level={2}
+                className="!m-0 !text-white !tracking-tight !text-3xl md:!text-4xl"
+              >
+                Welcome Back 👋
+              </Title>
 
-          <Paragraph type="secondary">
-            Manage your tasks and stay productive with DoFocus.
-          </Paragraph>
+              <Paragraph className="!m-0 !mt-2 !text-neutral-400">
+                Manage your tasks and stay productive with DoFocus.
+              </Paragraph>
+            </div>
+
+            {/* Stats summary chips */}
+            <div className="flex flex-wrap gap-2">
+              <div className="px-3.5 py-2 rounded-xl border border-white/[0.08] bg-white/[0.03]">
+                <div className="text-[10px] uppercase tracking-[0.15em] text-neutral-500 font-medium">
+                  Total
+                </div>
+                <div className="text-lg font-semibold text-white tabular-nums leading-none mt-1">
+                  {totalCount}
+                </div>
+              </div>
+              <div className="px-3.5 py-2 rounded-xl border border-white/[0.08] bg-white/[0.03]">
+                <div className="text-[10px] uppercase tracking-[0.15em] text-neutral-500 font-medium">
+                  Pending
+                </div>
+                <div className="text-lg font-semibold text-white tabular-nums leading-none mt-1">
+                  {pendingCount}
+                </div>
+              </div>
+              <div className="px-3.5 py-2 rounded-xl border border-white/[0.08] bg-white/[0.03]">
+                <div className="text-[10px] uppercase tracking-[0.15em] text-neutral-500 font-medium">
+                  Done
+                </div>
+                <div className="text-lg font-semibold text-white tabular-nums leading-none mt-1">
+                  {completedCount}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Task Input */}
@@ -190,7 +232,7 @@ const DashboardPage = () => {
         />
 
         {/* Tabs + Task List */}
-        <Card className="rounded-2xl shadow-sm">
+        <Card className="!rounded-2xl !bg-[#111111] !border-white/[0.08]">
           {/* Filter Tabs */}
           <Tabs
             activeKey={filter}

@@ -1,4 +1,4 @@
-import { Empty, Space } from "antd";
+import { Empty } from "antd";
 
 import TaskCard from "./TaskCard";
 
@@ -10,32 +10,28 @@ const TaskList = ({
 }) => {
   if (tasks.length === 0) {
     return (
-      <Empty description="No Tasks Found" />
+      <div className="py-10">
+        <Empty
+          description={
+            <span className="text-neutral-500 text-sm">No tasks yet</span>
+          }
+        />
+      </div>
     );
   }
 
   return (
-    <Space
-      direction="vertical"
-      size="middle"
-      className="w-full"
-    >
+    <div className="flex flex-col gap-2.5 pt-2">
       {tasks.map((task) => (
         <TaskCard
           key={task.id}
           task={task}
-          handleDeleteTask={
-            handleDeleteTask
-          }
-          handleToggleTask={
-            handleToggleTask
-          }
-          handleEditTask={
-            handleEditTask
-          }
+          handleDeleteTask={handleDeleteTask}
+          handleToggleTask={handleToggleTask}
+          handleEditTask={handleEditTask}
         />
       ))}
-    </Space>
+    </div>
   );
 };
 

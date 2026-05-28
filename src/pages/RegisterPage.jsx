@@ -259,153 +259,257 @@ const RegisterPage = () => {
     }
   };
 
+  // Step indicator helper
+  const steps = [
+    { id: 1, label: "Email" },
+    { id: 2, label: "Verify" },
+    { id: 3, label: "Details" },
+  ];
+
   return (
-    <main className="h-svh w-full bg-[#f0f0f0] flex justify-center items-center px-4">
-      <section className="w-full max-w-md shadow-2xl bg-white p-6 rounded-2xl flex flex-col gap-5">
-        <h1 className="text-3xl font-bold text-center">Register</h1>
+    <main className="min-h-svh w-full bg-[#0a0a0a] flex justify-center items-center px-4 py-10 relative overflow-hidden">
+      {/* Ambient background */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-x-0 top-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.08),_transparent_60%)]" />
+        <div
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+      </div>
 
-        {/* API Error */}
-        {errors.api && (
-          <p className="text-red-500 text-center text-sm">{errors.api}</p>
-        )}
-
-        {/* Email */}
-        <div>
-          <Input
-            placeholder="Email"
-            type="email"
-            size="large"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            disabled={otpStep >= 3}
-            status={errors.email ? "error" : ""}
-          />
-
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
+      <section className="relative w-full max-w-md fade-in-up">
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="h-9 w-9 rounded-lg bg-white text-black flex items-center justify-center font-bold tracking-tight transition-transform duration-300 group-hover:scale-105">
+              D
+            </div>
+            <span className="text-xl font-semibold text-white tracking-tight">
+              DoFocus
+            </span>
+          </Link>
         </div>
 
-        {/* Step 1 */}
-        {otpStep === 1 && (
-          <Button
-            type="primary"
-            size="large"
-            loading={loading.sendOtp}
-            onClick={handleSendOtp}
-          >
-            Send OTP
-          </Button>
-        )}
-
-        {/* Step 2 */}
-        {otpStep >= 2 && (
-          <>
-            <div>
-              <Flex vertical gap={10}>
-                <Input.OTP
-                  length={6}
-                  size="large"
-                  value={formData.otp}
-                  onChange={handleOtpChange}
-                  disabled={otpStep >= 3}
-                />
-
-                {errors.otp && (
-                  <p className="text-red-500 text-sm">{errors.otp}</p>
-                )}
-
-                {/* Verify OTP */}
-                {otpStep === 2 && (
-                  <Button
-                    color="cyan"
-                    variant="solid"
-                    size="large"
-                    loading={loading.verifyOtp}
-                    onClick={handleVerifyOtp}
-                  >
-                    Verify OTP
-                  </Button>
-                )}
-
-                {/* Resend OTP */}
-                {otpStep === 2 && (
-                  <Button
-                    size="large"
-                    loading={loading.sendOtp}
-                    onClick={handleSendOtp}
-                  >
-                    Resend OTP
-                  </Button>
-                )}
-              </Flex>
-            </div>
-          </>
-        )}
-
-        {/* Step 3 */}
-        {otpStep >= 3 && (
-          <>
-            <div>
-              <Input
-                placeholder="Full Name"
-                size="large"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                status={errors.fullName ? "error" : ""}
-              />
-
-              {errors.fullName && (
-                <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>
-              )}
-            </div>
-
-            <div>
-              <Input.Password
-                placeholder="Password"
-                size="large"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                status={errors.password ? "error" : ""}
-              />
-
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-              )}
-            </div>
-
-            {otpStep !== 4 && (
-              <Button
-                type="primary"
-                size="large"
-                loading={loading.register}
-                onClick={handleRegister}
-              >
-                Register
-              </Button>
-            )}
-          </>
-        )}
-
-        {/* Step 4 */}
-        {otpStep === 4 && (
+        <div className="bg-[#111111] border border-white/[0.08] p-8 rounded-2xl flex flex-col gap-5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)]">
           <div className="text-center">
-            <p className="text-green-600 font-semibold text-lg">
-              ✅ Registration Successful
+            <h1 className="text-2xl font-semibold text-white tracking-tight">
+              Create your account
+            </h1>
+            <p className="text-neutral-500 text-sm mt-1.5">
+              Start your focused work journey
             </p>
           </div>
-        )}
 
-        {/* Login */}
-        <p className="text-center text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="underline">
-            login
-          </Link>
-        </p>
+          {/* Step indicator */}
+          <div className="flex items-center justify-between gap-2 px-1">
+            {steps.map((s, idx) => {
+              const reached = otpStep >= s.id || otpStep === 4;
+              const isLast = idx === steps.length - 1;
+              return (
+                <div key={s.id} className="flex items-center flex-1">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={`h-6 w-6 rounded-full flex items-center justify-center text-[11px] font-semibold transition-colors duration-300 ${
+                        reached
+                          ? "bg-white text-black"
+                          : "bg-white/[0.04] text-neutral-500 border border-white/10"
+                      }`}
+                    >
+                      {s.id}
+                    </div>
+                    <span
+                      className={`text-xs ${
+                        reached ? "text-white" : "text-neutral-500"
+                      }`}
+                    >
+                      {s.label}
+                    </span>
+                  </div>
+                  {!isLast && (
+                    <div
+                      className={`flex-1 h-px mx-2 transition-colors duration-300 ${
+                        otpStep > s.id ? "bg-white" : "bg-white/10"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* API Error */}
+          {errors.api && (
+            <div className="px-3 py-2.5 rounded-lg border border-red-500/20 bg-red-500/[0.06]">
+              <p className="text-red-300 text-center text-sm m-0">
+                {errors.api}
+              </p>
+            </div>
+          )}
+
+          {/* Email */}
+          <div>
+            <label className="text-xs font-medium text-neutral-400 mb-1.5 block">
+              Email
+            </label>
+            <Input
+              placeholder="you@example.com"
+              type="email"
+              size="large"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={otpStep >= 3}
+              status={errors.email ? "error" : ""}
+            />
+
+            {errors.email && (
+              <p className="text-red-400 text-xs mt-1.5">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Step 1 */}
+          {otpStep === 1 && (
+            <Button
+              type="primary"
+              size="large"
+              loading={loading.sendOtp}
+              onClick={handleSendOtp}
+              className="!h-11 !font-medium"
+            >
+              Send OTP
+            </Button>
+          )}
+
+          {/* Step 2 */}
+          {otpStep >= 2 && (
+            <>
+              <div>
+                <label className="text-xs font-medium text-neutral-400 mb-1.5 block">
+                  Verification Code
+                </label>
+                <Flex vertical gap={10}>
+                  <Input.OTP
+                    length={6}
+                    size="large"
+                    value={formData.otp}
+                    onChange={handleOtpChange}
+                    disabled={otpStep >= 3}
+                  />
+
+                  {errors.otp && (
+                    <p className="text-red-400 text-xs">{errors.otp}</p>
+                  )}
+
+                  {/* Verify OTP */}
+                  {otpStep === 2 && (
+                    <Button
+                      type="primary"
+                      size="large"
+                      loading={loading.verifyOtp}
+                      onClick={handleVerifyOtp}
+                      className="!h-11 !font-medium"
+                    >
+                      Verify OTP
+                    </Button>
+                  )}
+
+                  {/* Resend OTP */}
+                  {otpStep === 2 && (
+                    <Button
+                      size="large"
+                      loading={loading.sendOtp}
+                      onClick={handleSendOtp}
+                      className="!h-11"
+                    >
+                      Resend OTP
+                    </Button>
+                  )}
+                </Flex>
+              </div>
+            </>
+          )}
+
+          {/* Step 3 */}
+          {otpStep >= 3 && (
+            <>
+              <div>
+                <label className="text-xs font-medium text-neutral-400 mb-1.5 block">
+                  Full Name
+                </label>
+                <Input
+                  placeholder="Jane Doe"
+                  size="large"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  status={errors.fullName ? "error" : ""}
+                />
+
+                {errors.fullName && (
+                  <p className="text-red-400 text-xs mt-1.5">
+                    {errors.fullName}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-neutral-400 mb-1.5 block">
+                  Password
+                </label>
+                <Input.Password
+                  placeholder="••••••••"
+                  size="large"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  status={errors.password ? "error" : ""}
+                />
+
+                {errors.password && (
+                  <p className="text-red-400 text-xs mt-1.5">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              {otpStep !== 4 && (
+                <Button
+                  type="primary"
+                  size="large"
+                  loading={loading.register}
+                  onClick={handleRegister}
+                  className="!h-11 !font-medium"
+                >
+                  Create account
+                </Button>
+              )}
+            </>
+          )}
+
+          {/* Step 4 */}
+          {otpStep === 4 && (
+            <div className="text-center py-2 px-3 rounded-lg border border-white/10 bg-white/[0.03]">
+              <p className="text-white font-medium text-sm m-0">
+                ✓ Registration successful — redirecting…
+              </p>
+            </div>
+          )}
+
+          {/* Login */}
+          <p className="text-center text-neutral-500 text-sm m-0">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-white font-medium hover:underline underline-offset-4"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
       </section>
     </main>
   );

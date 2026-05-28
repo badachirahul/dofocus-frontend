@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap");
+
 /* Define the order: Reset < AntD < Utilities */
 @layer tailwind-base, antd, tailwind-utilities;
 
@@ -11,8 +13,58 @@
 @layer tailwind-utilities {
   @tailwind utilities;
 }
+
+/* ============================
+   Global typography + surface
+   ============================ */
+html,
+body,
+#root {
+  background-color: #0a0a0a;
+  color: #e5e5e5;
+  font-family:
+    "Geist",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-feature-settings:
+    "cv11", "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Subtle scrollbar in monochrome */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 8px;
+  border: 2px solid #0a0a0a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}
+
+/* ============================
+   Calendar heatmap (monochrome)
+   ============================ */
 .react-calendar-heatmap text {
-  fill: #9ca3af;
+  fill: #737373;
   font-size: 11px;
 }
 
@@ -31,41 +83,295 @@
 
 /* Empty Cells */
 .react-calendar-heatmap .color-empty {
-  fill: #1f1f1f;
+  fill: #171717;
 }
 
-/* Green Levels */
+/* Monochrome Levels */
 .react-calendar-heatmap .color-scale-1 {
-  fill: #0e4429;
+  fill: #404040;
 }
-
 .react-calendar-heatmap .color-scale-2 {
-  fill: #006d32;
+  fill: #737373;
 }
-
 .react-calendar-heatmap .color-scale-3 {
-  fill: #26a641;
+  fill: #a3a3a3;
 }
-
 .react-calendar-heatmap .color-scale-4 {
-  fill: #39d353;
+  fill: #f5f5f5;
 }
 
 /* Month Labels */
 .react-calendar-heatmap-month-label {
-  fill: #d1d5db;
+  fill: #d4d4d4;
   font-size: 13px;
   font-weight: 600;
 }
 
-/* Responsive */
 .react-calendar-heatmap {
   min-width: 900px;
 }
 
+/* ============================
+   AntD overrides for dark theme
+   ============================ */
 
-.ant-btn-primary, [type='primary'] { background-color: #000000 !important; }
+/* Primary button: white surface, black text — Linear/Vercel style */
+.ant-btn-primary,
+[type="primary"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
+}
+.ant-btn-primary:hover,
+[type="primary"]:hover {
+  background-color: #e5e5e5 !important;
+  color: #000000 !important;
+  border-color: #e5e5e5 !important;
+}
+.ant-btn-primary:disabled,
+.ant-btn-primary.ant-btn-loading {
+  background-color: #525252 !important;
+  color: #a3a3a3 !important;
+  border-color: #525252 !important;
+}
 
-.ant-progress-indicator{
-  color: #000 !important;
+/* Default button: subtle dark surface */
+.ant-btn-default {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: #e5e5e5 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.ant-btn-default:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Danger buttons — keep subtle, not screaming red */
+.ant-btn-dangerous.ant-btn-default {
+  color: #fca5a5 !important;
+  border-color: rgba(252, 165, 165, 0.25) !important;
+  background-color: rgba(252, 165, 165, 0.04) !important;
+}
+.ant-btn-dangerous.ant-btn-default:hover {
+  color: #fecaca !important;
+  border-color: rgba(252, 165, 165, 0.5) !important;
+  background-color: rgba(252, 165, 165, 0.08) !important;
+}
+
+/* Progress indicator text (inside circular progress) */
+.ant-progress-text {
+  color: #ffffff !important;
+}
+.ant-progress-indicator {
+  color: #ffffff !important;
+}
+
+/* Inputs */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-input-password,
+.ant-otp .ant-otp-input {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f5f5f5 !important;
+}
+.ant-input::placeholder {
+  color: #737373 !important;
+}
+.ant-input:hover,
+.ant-input-affix-wrapper:hover,
+.ant-input-number:hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+.ant-input:focus,
+.ant-input-affix-wrapper-focused,
+.ant-input-number-focused {
+  border-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Card */
+.ant-card {
+  background-color: #111111 !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+.ant-card-body {
+  color: #e5e5e5 !important;
+}
+
+/* Tabs */
+.ant-tabs-tab {
+  color: #a3a3a3 !important;
+  font-weight: 500 !important;
+}
+.ant-tabs-tab:hover {
+  color: #f5f5f5 !important;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #ffffff !important;
+}
+.ant-tabs-ink-bar {
+  background: #ffffff !important;
+}
+.ant-tabs-top > .ant-tabs-nav::before {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Modal */
+.ant-modal-content {
+  background-color: #0f0f0f !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 30px 80px -10px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+}
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(6px) !important;
+}
+
+/* Tag (status pill) */
+.ant-tag {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: #e5e5e5 !important;
+  border-radius: 999px !important;
+}
+
+/* Typography in dark theme */
+.ant-typography {
+  color: #f5f5f5 !important;
+}
+.ant-typography.ant-typography-secondary,
+.ant-typography-caption,
+[type="secondary"] {
+  color: #737373 !important;
+}
+h1.ant-typography,
+.ant-typography h1,
+h2.ant-typography,
+.ant-typography h2,
+h3.ant-typography,
+.ant-typography h3,
+h4.ant-typography,
+.ant-typography h4,
+h5.ant-typography,
+.ant-typography h5 {
+  color: #ffffff !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Dropdown menu (header avatar) */
+.ant-dropdown-menu {
+  background-color: #111111 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 6px !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8) !important;
+}
+.ant-dropdown-menu-item {
+  color: #e5e5e5 !important;
+  border-radius: 8px !important;
+  margin: 2px 0 !important;
+}
+.ant-dropdown-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+.ant-dropdown-menu-item-divider {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Segmented */
+.ant-segmented {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+}
+.ant-segmented-item {
+  color: #a3a3a3 !important;
+}
+.ant-segmented-item-selected {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-radius: 8px !important;
+}
+
+/* Checkbox */
+.ant-checkbox-inner {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+.ant-checkbox-checked .ant-checkbox-inner::after {
+  border-color: #000000 !important;
+}
+
+/* Empty state */
+.ant-empty-description {
+  color: #737373 !important;
+}
+
+/* Result page */
+.ant-result-title {
+  color: #ffffff !important;
+}
+.ant-result-subtitle {
+  color: #a3a3a3 !important;
+}
+
+/* Message (toast) */
+.ant-message-notice-content {
+  background-color: #171717 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #f5f5f5 !important;
+}
+
+/* Avatar */
+.ant-avatar {
+  background-color: #262626 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Layout (overriding antd Layout) */
+.ant-layout,
+.ant-layout-header,
+.ant-layout-footer,
+.ant-layout-content {
+  background: transparent !important;
+}
+
+/* Smooth focus animation utility for timer */
+@keyframes pulse-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 18px rgba(255, 255, 255, 0);
+  }
+}
+.timer-pulse {
+  animation: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
 }

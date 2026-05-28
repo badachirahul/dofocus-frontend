@@ -57,10 +57,9 @@ const ProfilePage = () => {
   if (loading) {
     return (
       <MainLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <h1 className="text-2xl font-semibold text-gray-600">
-            Loading Profile...
-          </h1>
+        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
+          <div className="h-10 w-10 rounded-full border-2 border-white/10 border-t-white animate-spin" />
+          <p className="text-neutral-400 text-sm m-0">Loading profile…</p>
         </div>
       </MainLayout>
     );
@@ -70,43 +69,59 @@ const ProfilePage = () => {
   if (error) {
     return (
       <MainLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <h1 className="text-xl text-red-500">{error}</h1>
+        <div className="min-h-[60vh] flex items-center justify-center px-4">
+          <div className="max-w-md w-full text-center px-6 py-8 rounded-2xl border border-red-500/20 bg-red-500/[0.04]">
+            <p className="text-red-300 text-base m-0">{error}</p>
+          </div>
         </div>
       </MainLayout>
     );
   }
 
+  // Format selected date as readable label
+  const prettyDate = selectedDate
+    ? new Date(selectedDate).toLocaleDateString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
+
   return (
     <MainLayout>
-      <div className="min-h-screen bg-[#f8f9fb] p-4 md:p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* User Details */}
-          <UserDetails user={user} />
+      <div className="space-y-6">
+        {/* User Details */}
+        <UserDetails user={user} />
 
-          {/* Heatmap */}
-          <CalendarHeatmapSection
-            heatmapData={heatmapData}
-            onDateClick={handleDateClick}
-            userFromYear={user?.year}
-          />
+        {/* Heatmap */}
+        <CalendarHeatmapSection
+          heatmapData={heatmapData}
+          onDateClick={handleDateClick}
+          userFromYear={user?.year}
+        />
 
-          {/* Selected Day */}
-          {selectedDate && (
-            <div className="space-y-6">
-              {/* Selected Date Title */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-                <h2 className="text-2xl font-semibold text-gray-800">
-                  {selectedDate}
+        {/* Selected Day */}
+        {selectedDate && (
+          <div className="bg-[#111111] rounded-2xl border border-white/[0.08] p-6 sm:p-7 fade-in-up">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.18em] text-neutral-500 font-medium m-0">
+                  Selected day
+                </p>
+                <h2 className="text-xl sm:text-2xl font-semibold text-white tracking-tight m-0 mt-1">
+                  {prettyDate}
                 </h2>
-
-
-              {/* Task Breakdown */}
-              <TaskBreakdown tasks={selectedDayData.tasks} />
               </div>
+              <span className="text-xs text-neutral-500 font-mono px-2.5 py-1 rounded-md border border-white/10 bg-white/[0.03]">
+                {selectedDate}
+              </span>
             </div>
-          )}
-        </div>
+
+            {/* Task Breakdown */}
+            <TaskBreakdown tasks={selectedDayData.tasks} />
+          </div>
+        )}
       </div>
     </MainLayout>
   );

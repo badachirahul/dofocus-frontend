@@ -442,46 +442,48 @@ const FocusPage = () => {
 
   return (
     <MainLayout>
-      <div className="min-h-[80vh] flex justify-center items-center">
-        <Card className="w-full max-w-2xl rounded-3xl shadow-xl">
-          {isBreakMode ? (
-            <BreakTimer
-              breakTimeLeft={breakTimeLeft}
-              breakTotalSeconds={breakTotalSeconds}
-              formatTime={formatTime}
-            />
-          ) : (
-            <>
-              {/* Header */}
-              <FocusHeader taskName={task.task_name} />
-              {/* Status */}
-              <FocusStatus sessionStatus={sessionStatus} />
-              {/* Timer */}
-              <FocusTimer
-                timeLeft={timeLeft}
-                totalSeconds={totalSeconds}
+      <div className="min-h-[80vh] flex justify-center items-center py-8">
+        <Card className="w-full max-w-2xl !rounded-3xl !bg-[#0f0f0f] !border-white/[0.08] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.5)] fade-in-up">
+          <div className="p-2 sm:p-4">
+            {isBreakMode ? (
+              <BreakTimer
+                breakTimeLeft={breakTimeLeft}
+                breakTotalSeconds={breakTotalSeconds}
                 formatTime={formatTime}
               />
-              {/* Timer Editor */}
-              <TimerEditor
-                isEditing={isEditing}
-                editMinutes={editMinutes}
-                setEditMinutes={(value) => dispatch(setEditMinutes(value))}
-                setIsEditing={(value) => dispatch(setIsEditing(value))}
-                handleSaveTimer={handleSaveTimer}
-                sessionStatus={sessionStatus}
-              />
-              {/* Controls */}
-              <FocusControls
-                sessionStatus={sessionStatus}
-                handleStart={handleStart}
-                handlePause={handlePause}
-                handleResume={handleResume}
-                handleFinish={handleFinish}
-                handleCancel={handleCancel}
-              />
-            </>
-          )}
+            ) : (
+              <>
+                {/* Header */}
+                <FocusHeader taskName={task.task_name} />
+                {/* Status */}
+                <FocusStatus sessionStatus={sessionStatus} />
+                {/* Timer */}
+                <FocusTimer
+                  timeLeft={timeLeft}
+                  totalSeconds={totalSeconds}
+                  formatTime={formatTime}
+                />
+                {/* Timer Editor */}
+                <TimerEditor
+                  isEditing={isEditing}
+                  editMinutes={editMinutes}
+                  setEditMinutes={(value) => dispatch(setEditMinutes(value))}
+                  setIsEditing={(value) => dispatch(setIsEditing(value))}
+                  handleSaveTimer={handleSaveTimer}
+                  sessionStatus={sessionStatus}
+                />
+                {/* Controls */}
+                <FocusControls
+                  sessionStatus={sessionStatus}
+                  handleStart={handleStart}
+                  handlePause={handlePause}
+                  handleResume={handleResume}
+                  handleFinish={handleFinish}
+                  handleCancel={handleCancel}
+                />
+              </>
+            )}
+          </div>
         </Card>
         {/* Completion Modal */}
         <CompletionModal

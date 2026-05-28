@@ -4,42 +4,63 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <div className="min-h-screen bg-[#0a0a0a] text-neutral-200 relative overflow-hidden">
+      {/* Ambient background */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-x-0 top-0 h-[700px] bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.1),_transparent_55%)]" />
+        <div
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="w-full border-b border-gray-200 sticky top-0 bg-white/90 backdrop-blur z-50">
+      <header className="w-full border-b border-white/[0.06] sticky top-0 bg-black/60 backdrop-blur-xl z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">DoFocus</h1>
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg bg-white text-black flex items-center justify-center font-bold text-sm tracking-tight">
+              D
+            </div>
+            <h1 className="text-lg font-semibold tracking-tight text-white">
+              DoFocus
+            </h1>
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
             <a
               href="#features"
-              className="hover:text-blue-600 transition-colors"
+              className="text-neutral-400 hover:text-white transition-colors duration-200"
             >
               Features
             </a>
             <a
               href="#workflow"
-              className="hover:text-blue-600 transition-colors"
+              className="text-neutral-400 hover:text-white transition-colors duration-200"
             >
               Workflow
             </a>
-            <a href="#stats" className="hover:text-blue-600 transition-colors">
+            <a
+              href="#stats"
+              className="text-neutral-400 hover:text-white transition-colors duration-200"
+            >
               Productivity
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
-              className="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-neutral-200 text-sm font-medium hover:bg-white/[0.08] hover:border-white/20 transition-all duration-200 cursor-pointer"
               onClick={() => navigate("/login")}
             >
               Login
             </button>
 
             <button
-              className="px-5 py-2 rounded-xl bg-black text-white hover:scale-105 transition-all shadow-md cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-neutral-200 transition-all duration-200 cursor-pointer"
               onClick={() => navigate("/register")}
             >
               Get Started
@@ -49,109 +70,131 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20 lg:py-7 grid lg:grid-cols-2 gap-14 items-center">
-        <div>
-          <p className="inline-block px-4 py-2 rounded-full bg-gray-100 text-sm font-medium mb-6">
+      <section className="max-w-7xl mx-auto px-6 pt-16 pb-20 lg:pt-24 lg:pb-16 grid lg:grid-cols-2 gap-14 items-center">
+        <div className="fade-in-up">
+          <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-xs font-medium text-neutral-400 mb-6">
+            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
             Productivity + Pomodoro Focus System
           </p>
 
-          <h2 className="text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
+          <h2 className="text-5xl lg:text-6xl font-semibold leading-[1.05] tracking-tight text-white">
             Focus Better.
             <br />
-            Complete More.
+            <span className="text-neutral-400">Complete More.</span>
           </h2>
 
-          <p className="mt-6 text-lg text-gray-600 leading-relaxed max-w-xl">
+          <p className="mt-6 text-lg text-neutral-400 leading-relaxed max-w-xl">
             DoFocus helps students and professionals manage tasks, track
             productivity, and stay focused using a clean Pomodoro-based
             workflow.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-8 flex flex-wrap gap-3">
             <button
-              className="px-6 py-3 rounded-2xl bg-black text-white font-medium shadow-lg hover:scale-105 transition-all"
+              className="px-5 py-3 rounded-xl bg-white text-black font-medium hover:bg-neutral-200 transition-all duration-200 cursor-pointer hover:-translate-y-0.5"
               onClick={() => navigate("/register")}
             >
               Start Focusing
             </button>
 
-            <button className="px-6 py-3 rounded-2xl border border-gray-300 font-medium hover:bg-gray-100 transition-all">
-              <a href="#features">Learn More</a>
-            </button>
+            <a
+              href="#features"
+              className="px-5 py-3 rounded-xl border border-white/10 bg-white/[0.03] text-neutral-200 font-medium hover:bg-white/[0.08] hover:border-white/20 transition-all duration-200"
+            >
+              Learn More
+            </a>
           </div>
 
-          <div className="mt-10 flex items-center gap-8 text-sm text-gray-500">
+          <div className="mt-12 flex items-center gap-10 text-sm text-neutral-500">
             <div>
-              <h3 className="text-2xl font-bold text-black">10K+</h3>
-              <p>Focus Sessions</p>
+              <h3 className="text-2xl font-semibold text-white tracking-tight">
+                10K+
+              </h3>
+              <p className="mt-0.5">Focus Sessions</p>
             </div>
 
-            <div>
-              <h3 className="text-2xl font-bold text-black">5K+</h3>
-              <p>Tasks Completed</p>
+            <div className="border-l border-white/10 pl-10">
+              <h3 className="text-2xl font-semibold text-white tracking-tight">
+                5K+
+              </h3>
+              <p className="mt-0.5">Tasks Completed</p>
             </div>
 
-            <div>
-              <h3 className="text-2xl font-bold text-black">99%</h3>
-              <p>User Satisfaction</p>
+            <div className="border-l border-white/10 pl-10">
+              <h3 className="text-2xl font-semibold text-white tracking-tight">
+                99%
+              </h3>
+              <p className="mt-0.5">User Satisfaction</p>
             </div>
           </div>
         </div>
 
-        {/* Hero UI */}
-        <div className="relative">
-          <div className="bg-gray-50 border border-gray-200 rounded-3xl p-6 shadow-2xl">
+        {/* Hero UI mockup */}
+        <div className="relative fade-in-up" style={{ animationDelay: "120ms" }}>
+          <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-white/20 via-white/5 to-transparent opacity-50 blur-2xl" />
+          <div className="relative bg-[#111111] border border-white/[0.08] rounded-3xl p-6 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.5)]">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold">Today's Tasks</h3>
-              <span className="text-sm text-green-600 font-semibold">
+              <h3 className="text-lg font-semibold text-white tracking-tight">
+                Today's Tasks
+              </h3>
+              <span className="text-xs text-neutral-400 font-medium px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.03] flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
                 Focused
               </span>
             </div>
 
-            <div className="space-y-4">
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center justify-between hover:bg-white/[0.05] transition-colors duration-200">
                 <div>
-                  <p className="font-semibold">Study DBMS</p>
-                  <p className="text-sm text-gray-500">25 min focus session</p>
+                  <p className="font-medium text-white">Study DBMS</p>
+                  <p className="text-sm text-neutral-500 mt-0.5">
+                    25 min focus session
+                  </p>
                 </div>
-                <button className="px-4 py-2 rounded-xl bg-black text-white text-sm">
+                <button className="px-3.5 py-1.5 rounded-lg bg-white text-black text-sm font-medium hover:bg-neutral-200 transition-colors">
                   Focus
                 </button>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center justify-between hover:bg-white/[0.05] transition-colors duration-200">
                 <div>
-                  <p className="font-semibold">React Revision</p>
-                  <p className="text-sm text-gray-500">Completed</p>
+                  <p className="font-medium text-neutral-500 line-through">
+                    React Revision
+                  </p>
+                  <p className="text-sm text-neutral-600 mt-0.5">Completed</p>
                 </div>
-                <span className="text-green-600 font-semibold">✓</span>
+                <span className="text-neutral-300 font-semibold">✓</span>
               </div>
 
-              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
+              <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex items-center justify-between hover:bg-white/[0.05] transition-colors duration-200">
                 <div>
-                  <p className="font-semibold">System Design</p>
-                  <p className="text-sm text-gray-500">45 min focus session</p>
+                  <p className="font-medium text-white">System Design</p>
+                  <p className="text-sm text-neutral-500 mt-0.5">
+                    45 min focus session
+                  </p>
                 </div>
-                <button className="px-4 py-2 rounded-xl bg-black text-white text-sm">
+                <button className="px-3.5 py-1.5 rounded-lg bg-white text-black text-sm font-medium hover:bg-neutral-200 transition-colors">
                   Focus
                 </button>
               </div>
             </div>
 
             {/* Timer Card */}
-            <div className="mt-8 rounded-3xl bg-black text-white p-8 text-center shadow-xl">
-              <p className="text-gray-400 text-sm uppercase tracking-wide">
+            <div className="mt-6 rounded-2xl bg-black border border-white/[0.08] p-7 text-center">
+              <p className="text-neutral-500 text-[11px] uppercase tracking-[0.18em] font-medium">
                 Current Focus Session
               </p>
 
-              <h2 className="text-6xl font-extrabold mt-4">24:59</h2>
+              <h2 className="text-6xl font-semibold mt-4 text-white tracking-tighter tabular-nums">
+                24:59
+              </h2>
 
-              <div className="mt-6 flex justify-center gap-4">
-                <button className="px-5 py-2 rounded-xl bg-white text-black font-medium">
+              <div className="mt-6 flex justify-center gap-2.5">
+                <button className="px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-neutral-200 transition-colors">
                   Pause
                 </button>
 
-                <button className="px-5 py-2 rounded-xl border border-gray-600 hover:bg-gray-800 transition-all">
+                <button className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-neutral-200 text-sm font-medium hover:bg-white/[0.08] hover:border-white/20 transition-all">
                   Reset
                 </button>
               </div>
@@ -161,18 +204,21 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="bg-gray-50 py-24">
+      <section
+        id="features"
+        className="py-24 border-y border-white/[0.06] bg-[#0a0a0a]"
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <p className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-500">
               Features
             </p>
-            <h2 className="text-4xl font-bold mt-4">
+            <h2 className="text-4xl font-semibold mt-4 text-white tracking-tight">
               Everything You Need To Stay Focused
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               {
                 title: "Task Management",
@@ -193,14 +239,18 @@ export default function LandingPage() {
             ].map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm hover:shadow-xl transition-all"
+                className="group bg-[#111111] rounded-2xl p-7 border border-white/[0.06] hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300"
               >
-                <div className="w-14 h-14 rounded-2xl bg-black text-white flex items-center justify-center text-xl font-bold mb-6">
-                  {index + 1}
+                <div className="w-11 h-11 rounded-xl border border-white/10 bg-white/[0.04] text-white flex items-center justify-center text-base font-semibold mb-6 group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                  {String(index + 1).padStart(2, "0")}
                 </div>
 
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
+                <h3 className="text-lg font-semibold mb-2 text-white tracking-tight">
+                  {feature.title}
+                </h3>
+                <p className="text-neutral-400 text-sm leading-relaxed">
+                  {feature.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -210,24 +260,28 @@ export default function LandingPage() {
       {/* Workflow Section */}
       <section id="workflow" className="py-24">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-500">
             Workflow
           </p>
 
-          <h2 className="text-4xl font-bold mt-4">Simple Productivity Flow</h2>
+          <h2 className="text-4xl font-semibold mt-4 text-white tracking-tight">
+            Simple Productivity Flow
+          </h2>
 
-          <div className="mt-16 grid md:grid-cols-3 gap-8">
+          <div className="mt-16 grid md:grid-cols-3 gap-4">
             {["Create Tasks", "Start Focus Session", "Track Productivity"].map(
               (step, index) => (
                 <div
                   key={index}
-                  className="rounded-3xl border border-gray-200 p-10 bg-white shadow-sm"
+                  className="rounded-2xl border border-white/[0.06] p-10 bg-[#111111] hover:bg-white/[0.02] hover:border-white/20 transition-all duration-300 group"
                 >
-                  <div className="w-16 h-16 mx-auto rounded-full bg-black text-white flex items-center justify-center text-2xl font-bold mb-6">
+                  <div className="w-14 h-14 mx-auto rounded-full border border-white/10 bg-white/[0.04] text-white flex items-center justify-center text-xl font-semibold mb-6 group-hover:bg-white group-hover:text-black transition-colors duration-300">
                     {index + 1}
                   </div>
 
-                  <h3 className="text-2xl font-bold">{step}</h3>
+                  <h3 className="text-xl font-semibold text-white tracking-tight">
+                    {step}
+                  </h3>
                 </div>
               ),
             )}
@@ -236,47 +290,67 @@ export default function LandingPage() {
       </section>
 
       {/* Stats Section */}
-      <section id="stats" className="bg-black text-white py-24">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold">Build Consistency Every Day</h2>
+      <section
+        id="stats"
+        className="py-24 border-y border-white/[0.06] bg-black relative overflow-hidden"
+      >
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+        <div className="max-w-6xl mx-auto px-6 text-center relative">
+          <h2 className="text-4xl font-semibold text-white tracking-tight">
+            Build Consistency Every Day
+          </h2>
 
-          <p className="mt-6 text-gray-400 max-w-2xl mx-auto text-lg">
+          <p className="mt-6 text-neutral-400 max-w-2xl mx-auto text-lg">
             Stay disciplined with structured focus sessions and measurable
             productivity tracking.
           </p>
 
-          <div className="mt-16 grid md:grid-cols-3 gap-8">
-            <div className="border border-gray-800 rounded-3xl p-10">
-              <h3 className="text-5xl font-extrabold">25m</h3>
-              <p className="mt-4 text-gray-400">Default Pomodoro Timer</p>
+          <div className="mt-16 grid md:grid-cols-3 gap-4">
+            <div className="border border-white/[0.08] bg-white/[0.02] rounded-2xl p-10 hover:bg-white/[0.04] transition-colors duration-300">
+              <h3 className="text-5xl font-semibold text-white tracking-tight tabular-nums">
+                25m
+              </h3>
+              <p className="mt-4 text-neutral-400">Default Pomodoro Timer</p>
             </div>
 
-            <div className="border border-gray-800 rounded-3xl p-10">
-              <h3 className="text-5xl font-extrabold">100%</h3>
-              <p className="mt-4 text-gray-400">Productivity Tracking</p>
+            <div className="border border-white/[0.08] bg-white/[0.02] rounded-2xl p-10 hover:bg-white/[0.04] transition-colors duration-300">
+              <h3 className="text-5xl font-semibold text-white tracking-tight">
+                100%
+              </h3>
+              <p className="mt-4 text-neutral-400">Productivity Tracking</p>
             </div>
 
-            <div className="border border-gray-800 rounded-3xl p-10">
-              <h3 className="text-5xl font-extrabold">24/7</h3>
-              <p className="mt-4 text-gray-400">Focus Anywhere Anytime</p>
+            <div className="border border-white/[0.08] bg-white/[0.02] rounded-2xl p-10 hover:bg-white/[0.04] transition-colors duration-300">
+              <h3 className="text-5xl font-semibold text-white tracking-tight">
+                24/7
+              </h3>
+              <p className="mt-4 text-neutral-400">Focus Anywhere Anytime</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-5xl font-extrabold leading-tight">
+          <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-white tracking-tight">
             Start Your Deep Work Journey Today
           </h2>
 
-          <p className="mt-6 text-lg text-gray-600">
+          <p className="mt-6 text-lg text-neutral-400">
             Manage tasks, focus deeply, and improve productivity with DoFocus.
           </p>
 
           <button
-            className="mt-10 px-8 py-4 rounded-2xl bg-black text-white font-semibold text-lg hover:scale-105 transition-all shadow-lg cursor-pointer"
+            className="mt-10 px-7 py-3.5 rounded-xl bg-white text-black font-medium hover:bg-neutral-200 transition-all duration-200 cursor-pointer hover:-translate-y-0.5"
             onClick={() => navigate("/register")}
           >
             Get Started Free
@@ -285,18 +359,27 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+      <footer className="border-t border-white/[0.06] py-8">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
           <p>© 2026 DoFocus. All rights reserved.</p>
 
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-black transition-colors">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Privacy
             </a>
-            <a href="#" className="hover:text-black transition-colors">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Terms
             </a>
-            <a href="#" className="hover:text-black transition-colors">
+            <a
+              href="#"
+              className="hover:text-white transition-colors duration-200"
+            >
               Contact
             </a>
           </div>
